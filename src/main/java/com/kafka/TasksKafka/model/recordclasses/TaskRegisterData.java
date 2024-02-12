@@ -14,6 +14,6 @@ public record TaskRegisterData(
         @NotNull
         @Max(10)
         @Min(0)
-        int priority,
-        TaskState taskState) {
+        int priority
+        ) {
 }

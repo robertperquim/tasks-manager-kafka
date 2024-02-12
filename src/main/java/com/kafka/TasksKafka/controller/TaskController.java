@@ -4,7 +4,7 @@ package com.kafka.TasksKafka.controller;
 import com.kafka.TasksKafka.model.recordclasses.TaskDetalingData;
 import com.kafka.TasksKafka.model.recordclasses.TaskRegisterData;
 import com.kafka.TasksKafka.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,9 +17,9 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("task")
+@AllArgsConstructor
 public class TaskController {
 
-    @Autowired
     private TaskService taskService;
 
     @GetMapping("list")

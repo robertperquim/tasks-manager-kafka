@@ -24,7 +24,7 @@ public class Task {
         this.title = data.title();
         this.description = data.description();
         this.priority = data.priority();
-        this.state = data.taskState();
+        //this.state = data.taskState();
     }
 
 }

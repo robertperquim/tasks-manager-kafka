@@ -1,10 +1,9 @@
 package com.kafka.TasksKafka.service;
-
-
 import com.kafka.TasksKafka.model.Task;
 import com.kafka.TasksKafka.model.recordclasses.TaskDetalingData;
 import com.kafka.TasksKafka.model.recordclasses.TaskRegisterData;
 import com.kafka.TasksKafka.repository.TaskRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,9 +12,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import java.util.List;
 
-
-
 @Service
+@AllArgsConstructor
 public class TaskService {
 
     @Autowired
