@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -29,6 +30,13 @@ public class TaskController {
     @PostMapping("create")
     public Mono<ResponseEntity<TaskDetalingData>> createTask(@RequestBody TaskRegisterData data) {
         return taskService.createTask(data).map(ResponseEntity::ok);
+    }
+
+    @DeleteMapping("delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<ResponseEntity<?>> deleteTask(@RequestParam String id){
+        return Mono.just(id)
+                .flatMap(taskService::deleteTask).map(ResponseEntity::ok);
     }
 
 
