@@ -38,4 +38,7 @@ public class TaskService {
                 .map(task -> new TaskDetalingData(newTask));
     }
 
+    public Mono<?> deleteTask(String id) {
+        return Mono.fromRunnable(() -> taskRepository.deleteById(id));
+    }
 }
