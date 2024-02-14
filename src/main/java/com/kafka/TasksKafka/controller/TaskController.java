@@ -5,6 +5,7 @@ import com.kafka.TasksKafka.model.recordclasses.TaskDetalingData;
 import com.kafka.TasksKafka.model.recordclasses.TaskRegisterData;
 import com.kafka.TasksKafka.service.TaskService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,9 +18,9 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("task")
-@AllArgsConstructor
 public class TaskController {
 
+    @Autowired(required = false)
     private TaskService taskService;
 
     @GetMapping("list")
@@ -34,10 +35,11 @@ public class TaskController {
 
     @DeleteMapping("delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<ResponseEntity<?>> deleteTask(@RequestParam String id){
-        return Mono.just(id)
-                .flatMap(taskService::deleteTask).map(ResponseEntity::ok);
+    public Mono<ResponseEntity<?>> deleteTask(@PathVariable String id) {
+        return taskService.deleteTask(id)
+                .then(Mono.just(ResponseEntity.noContent().build()));
     }
+
 
 
 }
