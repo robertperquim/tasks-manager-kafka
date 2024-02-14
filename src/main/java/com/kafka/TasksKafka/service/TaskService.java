@@ -3,7 +3,6 @@ import com.kafka.TasksKafka.model.Task;
 import com.kafka.TasksKafka.model.recordclasses.TaskDetalingData;
 import com.kafka.TasksKafka.model.recordclasses.TaskRegisterData;
 import com.kafka.TasksKafka.repository.TaskRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -11,22 +10,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
 
     public Mono<Page<TaskDetalingData>> listTasks(Pageable pageable) {
-        return Mono.fromCallable(()->{
-            Page<Task> pageTasks =  taskRepository.findAll(pageable); // cria uma pagina de tasks
-            List<TaskDetalingData> taskDetalingData = taskRepository.findAll(pageable).getContent()
+        return Mono.fromSupplier(() -> {
+            Page<Task> pageTasks = taskRepository.findAll(pageable);
+            List<TaskDetalingData> taskDetalingData = pageTasks.getContent()
                     .stream()
                     .map(TaskDetalingData::new)
-                    .toList(); // crio a lista de dtos com os dados das tasks
-            return new PageImpl<>(taskDetalingData, pageable, pageTasks.getTotalElements()); //crio uma page de dtos
+                    .collect(Collectors.toList());
+            return new PageImpl<>(taskDetalingData, pageable, pageTasks.getTotalElements());
         });
     }
 
@@ -36,7 +35,8 @@ public class TaskService {
                 .map(task -> new TaskDetalingData(newTask));
     }
 
-    public Mono<?> deleteTask(String id) {
+    public Mono<Void> deleteTask(String id) {
         return Mono.fromRunnable(() -> taskRepository.deleteById(id));
     }
+
 }
