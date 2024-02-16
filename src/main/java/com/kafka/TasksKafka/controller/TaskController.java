@@ -4,6 +4,7 @@ package com.kafka.TasksKafka.controller;
 import com.kafka.TasksKafka.model.recordclasses.TaskDetalingData;
 import com.kafka.TasksKafka.model.recordclasses.TaskRegisterData;
 import com.kafka.TasksKafka.service.TaskService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class TaskController {
     }
 
     @PostMapping("create")
-    public Mono<ResponseEntity<TaskDetalingData>> createTask(@RequestBody TaskRegisterData data) {
+    public Mono<ResponseEntity<TaskDetalingData>> createTask(@RequestBody @Valid TaskRegisterData data) {
         return taskService.createTask(data)
                 .doOnNext(taskDetalingData -> LOGGER.info("Saved task with id {}", taskDetalingData.id()))
                 .map(ResponseEntity::ok);
