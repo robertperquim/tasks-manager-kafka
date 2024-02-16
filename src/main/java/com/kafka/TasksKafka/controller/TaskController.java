@@ -4,7 +4,8 @@ package com.kafka.TasksKafka.controller;
 import com.kafka.TasksKafka.model.recordclasses.TaskDetalingData;
 import com.kafka.TasksKafka.model.recordclasses.TaskRegisterData;
 import com.kafka.TasksKafka.service.TaskService;
-import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 
-
 @RestController
 @RequestMapping("task")
 public class TaskController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
 
     @Autowired(required = false)
     private TaskService taskService;
@@ -30,14 +32,17 @@ public class TaskController {
 
     @PostMapping("create")
     public Mono<ResponseEntity<TaskDetalingData>> createTask(@RequestBody TaskRegisterData data) {
-        return taskService.createTask(data).map(ResponseEntity::ok);
+        return taskService.createTask(data)
+                .doOnNext(taskDetalingData -> LOGGER.info("Saved task with id {}", taskDetalingData.id()))
+                .map(ResponseEntity::ok);
     }
 
     @DeleteMapping("delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<ResponseEntity<?>> deleteTask(@PathVariable String id) {
+    public Mono<ResponseEntity<Object>> deleteTask(@PathVariable String id) {
         return taskService.deleteTask(id)
-                .then(Mono.just(ResponseEntity.noContent().build()));
+                .then(Mono.just(ResponseEntity.noContent().build())
+                        .doOnNext(it -> LOGGER.info("Deleting task with id {}", id)));
     }
 
 
