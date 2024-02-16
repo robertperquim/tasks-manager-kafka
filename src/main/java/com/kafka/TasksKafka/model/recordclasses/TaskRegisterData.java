@@ -1,6 +1,6 @@
 package com.kafka.TasksKafka.model.recordclasses;
 
-import com.kafka.TasksKafka.model.TaskState;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
