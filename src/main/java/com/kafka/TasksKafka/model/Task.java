@@ -18,7 +18,7 @@ public class Task {
     private String title;
     private String description;
     private int priority;
-    private TaskState state;
+
 
     public Task(TaskRegisterData data) {
         this.title = data.title();
