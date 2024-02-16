@@ -1,6 +1,8 @@
 package com.kafka.TasksKafka.controller;
 
 
+import com.kafka.TasksKafka.model.Task;
+import com.kafka.TasksKafka.model.TaskState;
 import com.kafka.TasksKafka.model.recordclasses.TaskDetalingData;
 import com.kafka.TasksKafka.model.recordclasses.TaskRegisterData;
 import com.kafka.TasksKafka.service.TaskService;
@@ -26,9 +28,27 @@ public class TaskController {
     @Autowired(required = false)
     private TaskService taskService;
 
+
+
+
+
     @GetMapping("list")
-    public Mono<ResponseEntity<Page<TaskDetalingData>>> getTasks(@PageableDefault(size = 2, sort = {"title"}) Pageable pageable) {
-       return taskService.listTasks(pageable).map(ResponseEntity::ok);
+    public ResponseEntity<Mono<Page<TaskDetalingData>>> getTasks(@RequestParam(required = false) String id,
+                                                                 @RequestParam(required = false) String title,
+                                                                 @RequestParam(required = false) String description,
+                                                                 @RequestParam(required = false, defaultValue = "0") int priority,
+                                                                 @RequestParam(required = false) TaskState taskState,
+                                                                 @RequestParam(value = "pageNumber", defaultValue = "0") Integer pageNumber,
+                                                                 @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize
+                                                                 ) {
+
+
+
+
+        return ResponseEntity.ok(taskService.findPagineted(TaskDetalingData.toTask(id, title, description, priority), pageNumber, pageSize)
+                .map(it -> it.map(TaskDetalingData::new)));
+
+
     }
 
     @PostMapping("create")
